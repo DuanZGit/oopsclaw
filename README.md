@@ -151,4 +151,4 @@ MIT License
 
 ## 👤 作者
 
-OpenClaw/iFlow Community
+DuanZ & iFlow Community
