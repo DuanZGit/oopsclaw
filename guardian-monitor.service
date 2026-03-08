@@ -1,0 +1,13 @@
+[Unit]
+Description=Guardian Monitor Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/duanz/iflow-guardian/bin/monitor.sh
+WorkingDirectory=/home/duanz/iflow-guardian
+User=duanz
+
+[Install]
+WantedBy=default.target
