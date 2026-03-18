@@ -126,7 +126,7 @@ npm install <缺失的模块>
 
 - **检查频率**: 每小时
 - **分析方式**: AI 错误分析
-- **存储位置**: `~/.iflow/guardian/knowledge/`
+- **存储位置**: `~/.oopsclaw/knowledge/`
 
 ---
 

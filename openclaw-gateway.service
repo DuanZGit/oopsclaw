@@ -2,6 +2,10 @@
 Description=OpenClaw Gateway (v2026.2.26)
 After=network-online.target
 Wants=network-online.target
+OnFailure=oopsclaw-event.service
+
+# Oopsclaw 路径
+Environment=OOPSCLAW_DIR=/home/duanz/.oopsclaw
 
 [Service]
 ExecStart=/usr/bin/node /home/duanz/.npm-global/lib/node_modules/openclaw/dist/index.js gateway --port 18789

@@ -1,0 +1,11 @@
+[Unit]
+Description=Oopsclaw Monitor Timer - 每5分钟执行一次健康检查
+Requires=oopsclaw-monitor.service
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Unit=oopsclaw-monitor.service
+
+[Install]
+WantedBy=timers.target

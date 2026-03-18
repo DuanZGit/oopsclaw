@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# iFlow Guardian - 事件驱动修复脚本
+# iFlow Oopsclaw - 事件驱动修复脚本
 # 当 OpenClaw Gateway 失败时由 systemd OnFailure 触发
 # 简化版：直接调用 iflow + guardian agent
 #
@@ -8,25 +8,25 @@
 set -euo pipefail
 
 # 配置
-GUARDIAN_DIR="$HOME/.iflow/guardian"
-LOG_DIR="$GUARDIAN_DIR/logs"
-KNOWLEDGE_DIR="$GUARDIAN_DIR/knowledge"
+OOPSCLAW_DIR="$HOME/.oopsclaw"
+LOG_DIR="$OOPSCLAW_DIR/logs"
+KNOWLEDGE_DIR="$OOPSCLAW_DIR/knowledge"
 OPENCLAW_CONFIG="$HOME/.openclaw/openclaw.json"
 GATEWAY_PORT=18789
 SERVICE_NAME="openclaw-gateway.service"
-FEISHU_USER_ID_FILE="$GUARDIAN_DIR/feishu_user_id.txt"
+FEISHU_USER_ID_FILE="$HOME/.oopsclaw/feishu_user_id.txt"
 
 # 超时配置
 IFLOW_TIMEOUT=300
 
 # 单实例锁
-LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/guardian-event.lock"
+LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/oopsclaw-event.lock"
 exec 9>"$LOCK_FILE"
-flock -n 9 || { echo "Guardian 已在运行中，退出."; exit 0; }
+flock -n 9 || { echo "Oopsclaw 已在运行中，退出."; exit 0; }
 
 # 日志
 log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_DIR/guardian-event.log"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_DIR/oopsclaw-event.log"
 }
 
 log_error() {
@@ -113,7 +113,7 @@ call_iflow_guardian() {
     local knowledge=$(read_knowledge)
     
     # 构建 prompt
-    local prompt="你是 iFlow Guardian 守护者，专门负责修复 OpenClaw Gateway 故障。
+    local prompt="你是 iFlow Oopsclaw 守护者，专门负责修复 OpenClaw Gateway 故障。
 
 ## 你的任务
 1. 读取并理解故障信息
@@ -194,7 +194,7 @@ verify_service() {
 write_result() {
     local status="$1"
     local message="$2"
-    local out="${XDG_RUNTIME_DIR:-/tmp}/guardian-event-result.json"
+    local out="${XDG_RUNTIME_DIR:-/tmp}/oopsclaw-event-result.json"
     cat > "$out" <<EOF
 {"status":"$status","message":"$message","timestamp":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
 EOF
@@ -203,10 +203,10 @@ EOF
 
 # 主函数
 main() {
-    log "========== Guardian 事件触发 =========="
+    log "========== Oopsclaw 事件触发 =========="
     
     # 通知用户
-    send_feishu "🔧 OpenClaw Gateway 故障" "正在调用 Guardian AI 自动修复..." "yellow"
+    send_feishu "🔧 OpenClaw Gateway 故障" "正在调用 Oopsclaw AI 自动修复..." "yellow"
     
     # 收集故障信息
     local error_info=$(collect_error_info)
@@ -220,11 +220,11 @@ main() {
             
             # 触发自我进化评估（后台运行，不阻塞）
             (
-                bash "$GUARDIAN_DIR/guardian-evolve.sh" success 120 no yes "服务启动失败" >> "$LOG_DIR/evolution.log" 2>&1
+                bash "$OOPSCLAW_DIR/oopsclaw-evolve.sh" success 120 no yes "服务启动失败" >> "$LOG_DIR/evolution.log" 2>&1
             ) &
             
-            send_feishu "✅ OpenClaw 已修复" "Guardian AI 修复成功，服务已恢复正常\n自我进化评估已触发" "green"
-            write_result "success" "Fixed by Guardian AI"
+            send_feishu "✅ OpenClaw 已修复" "Oopsclaw AI 修复成功，服务已恢复正常\n自我进化评估已触发" "green"
+            write_result "success" "Fixed by Oopsclaw AI"
             exit 0
         fi
     fi

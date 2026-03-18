@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-# Guardian Prompt 进化模块
-# 调用专门的 guardian-evolve agent 进行评估和优化
+# Oopsclaw Prompt 进化模块
+# 调用专门的 oopsclaw-evolve agent 进行评估和优化
 #
 
 set -euo pipefail
 
-GUARDIAN_DIR="$HOME/.iflow/guardian"
-LOG_DIR="$GUARDIAN_DIR/logs"
-KNOWLEDGE_DIR="$GUARDIAN_DIR/knowledge"
+OOPSCLAW_DIR="$HOME/.oopsclaw"
+LOG_DIR="$OOPSCLAW_DIR/logs"
+KNOWLEDGE_DIR="$OOPSCLAW_DIR/knowledge"
 PROMPT_FILE="$HOME/.iflow/agents/guardian.md"
-EVOLVE_PROMPT_FILE="$HOME/.iflow/agents/guardian-evolve.md"
+EVOLVE_PROMPT_FILE="$HOME/.iflow/agents/oopsclaw-evolve.md"
 
 # 评分权重
 WEIGHT_RESULT=0.4
@@ -103,7 +103,7 @@ build_evolve_prompt() {
     [ "$used_kb" = "yes" ] && score_knowledge=1 || score_knowledge=0.3
     
     cat <<EOF
-你是 Guardian 进化优化专家。请分析这次修复的表现并生成优化建议。
+你是 Oopsclaw 进化优化专家。请分析这次修复的表现并生成优化建议。
 
 ## 修复评估数据
 - 修复结果: $last_result
@@ -123,7 +123,7 @@ build_evolve_prompt() {
 
 ## 知识库文件
 请读取以下文件进行分析:
-- Guardian Prompt: $PROMPT_FILE
+- Oopsclaw Prompt: $PROMPT_FILE
 - 修复历史: $LOG_DIR/repair_history.log
 - 经验目录: $KNOWLEDGE_DIR/learned/
 
@@ -158,7 +158,7 @@ apply_new_prompt() {
     
     if [ -n "$new_prompt" ]; then
         echo "$new_prompt" > "$PROMPT_FILE"
-        echo "✅ Guardian prompt 已更新"
+        echo "✅ Oopsclaw prompt 已更新"
         return 0
     fi
     return 1
@@ -187,7 +187,7 @@ main() {
     local used_kb="${4:-yes}"
     local last_error="${5:-未知}"
     
-    echo "=== Guardian Prompt 进化评估 ==="
+    echo "=== Oopsclaw Prompt 进化评估 ==="
     
     # 计算评分
     local score=$(calculate_score "$last_result" "$duration" "$is_new" "$used_kb")
@@ -202,12 +202,12 @@ main() {
     echo "需要进化: $evolve"
     
     if [ "$evolve" = "yes" ]; then
-        echo "🚀 调用 Guardian Evolve Agent..."
+        echo "🚀 调用 Oopsclaw Evolve Agent..."
         
         # 构建 prompt
         local evolve_prompt=$(build_evolve_prompt "$score" "$success_rate" "$last_result" "$duration" "$is_new" "$used_kb" "$last_error")
         
-        # 调用 iflow guardian-evolve agent
+        # 调用 iflow oopsclaw-evolve agent
         local evolution_result
         evolution_result=$(timeout 180 iflow -p "$evolve_prompt" -y 2>&1) || evolution_result="调用失败: $?"
         

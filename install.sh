@@ -1,11 +1,11 @@
 #!/bin/bash
 #==============================================
-# OppsClaw 一键安装脚本
+# oopsclaw 一键安装脚本
 #==============================================
 
 set -e
 
-echo "🤖 OppsClaw 安装向导"
+echo "🤖 oopsclaw 安装向导"
 echo "===================="
 
 # 颜色
@@ -62,8 +62,7 @@ install_iflow() {
 setup_directories() {
     echo -e "\n${YELLOW}[2/4] 创建目录结构...${NC}"
     
-    mkdir -p ~/.iflow/guardian/{knowledge/base,logs,fixes,evolutions,scores}
-    mkdir -p ~/.iflow/monitor/{logs,knowledge}
+    mkdir -p ~/.oopsclaw/{knowledge/base,logs,fixes,evolutions,scores}
     
     echo -e "${GREEN}✓${NC} 目录已创建"
 }
@@ -75,18 +74,18 @@ copy_files() {
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     
     # 复制守护者脚本
-    cp -f "$SCRIPT_DIR/guardian-event.sh" ~/.iflow/guardian/
-    cp -f "$SCRIPT_DIR/guardian-evolve.sh" ~/.iflow/guardian/
-    cp -f "$SCRIPT_DIR/monitor.sh" ~/.iflow/guardian/
-    cp -f "$SCRIPT_DIR/ai-evolve.sh" ~/.iflow/guardian/
+    cp -f "$SCRIPT_DIR/oopsclaw-event.sh" ~/.oopsclaw/
+    cp -f "$SCRIPT_DIR/oopsclaw-evolve.sh" ~/.oopsclaw/
+    cp -f "$SCRIPT_DIR/monitor.sh" ~/.oopsclaw/
+    cp -f "$SCRIPT_DIR/ai-evolve.sh" ~/.oopsclaw/
     
     # 复制知识库
-    cp -rf "$SCRIPT_DIR/knowledge/"* ~/.iflow/guardian/knowledge/
+    cp -rf "$SCRIPT_DIR/knowledge/"* ~/.oopsclaw/knowledge/
     
     # 复制 systemd 服务
     mkdir -p ~/.config/systemd/user
     cp -f "$SCRIPT_DIR/openclaw-gateway.service" ~/.config/systemd/user/
-    cp -f "$SCRIPT_DIR/iflow-guardian-event.service" ~/.config/systemd/user/
+    cp -f "$SCRIPT_DIR/oopsclaw-event.service" ~/.config/systemd/user/
     
     echo -e "${GREEN}✓${NC} 文件已复制"
 }
@@ -102,7 +101,7 @@ setup_services() {
     mkdir -p ~/.config/systemd/user/openclaw-gateway.service.d
     cat > ~/.config/systemd/user/openclaw-gateway.service.d/auto-fix.conf << 'EOF'
 [Unit]
-OnFailure=iflow-guardian-event.service
+OnFailure=oopsclaw-event.service
 StartLimitIntervalSec=60
 StartLimitBurst=5
 
@@ -113,7 +112,7 @@ EOF
     echo -e "${GREEN}✓${NC} OnFailure 已配置"
     
     # 设置权限
-    chmod +x ~/.iflow/guardian/*.sh
+    chmod +x ~/.oopsclaw/*.sh
     
     echo -e "${GREEN}✓${NC} 服务已配置"
 }
@@ -126,16 +125,16 @@ main() {
     setup_services
     
     echo -e "\n${GREEN}======================================${NC}"
-    echo -e "${GREEN}🎉 OppsClaw 安装完成!${NC}"
+    echo -e "${GREEN}🎉 oopsclaw 安装完成!${NC}"
     echo -e "${GREEN}======================================${NC}"
     echo ""
     echo "📖 使用说明:"
     echo "  • 故障自动修复: OnFailure 机制 (Gateway 失败时自动触发)"
-    echo "  • 手动运行守护者: bash ~/.iflow/guardian/guardian-event.sh"
-    echo "  • 查看日志: tail -f ~/.iflow/guardian/logs/guardian-event.log"
+    echo "  • 手动运行守护者: bash ~/.oopsclaw/oopsclaw-event.sh"
+    echo "  • 查看日志: journalctl --user -u oopsclaw-event.service -f"
     echo ""
-    echo "📁 文件位置: ~/.iflow/guardian/"
-    echo "📚 文档: https://github.com/DuanZGit/OppsClaw"
+    echo "📁 文件位置: ~/.oopsclaw/"
+    echo "📚 文档: https://github.com/DuanZGit/oopsclaw"
     echo ""
 }
 

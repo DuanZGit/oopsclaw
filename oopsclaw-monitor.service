@@ -1,12 +1,12 @@
 [Unit]
-Description=Guardian Monitor Service
+Description=Oopsclaw Monitor Service
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/duanz/iflow-guardian/bin/monitor.sh
-WorkingDirectory=/home/duanz/iflow-guardian
+ExecStart=/home/duanz/.oopsclaw/monitor.sh
+WorkingDirectory=/home/duanz/.oopsclaw
 User=duanz
 
 [Install]

@@ -1,4 +1,4 @@
-# iFlow Guardian 故障指纹库
+# iFlow Oopsclaw 故障指纹库
 # 格式: 错误关键词 | 故障类型 | 修复策略
 
 # 配置错误类

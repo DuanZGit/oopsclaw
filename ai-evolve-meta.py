@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-iFlow Guardian Meta-Evolution System
+iFlow Oopsclaw Meta-Evolution System
 进化的进化 - 评分选择器 + 精简优化
 
 功能：
@@ -17,11 +17,11 @@ from datetime import datetime
 from typing import Dict, List, Optional
 
 # 路径配置
-GUARDIAN_DIR = os.path.expanduser("~/.iflow/guardian")
-EVOLUTIONS_DIR = f"{GUARDIAN_DIR}/evolutions"
-SCORES_DIR = f"{GUARDIAN_DIR}/scores"
-LEARNED_DIR = f"{GUARDIAN_DIR}/knowledge/learned"
-LOG_DIR = f"{GUARDIAN_DIR}/logs"
+OOPSCLAW_DIR = os.path.expanduser("~/.oopsclaw")
+EVOLUTIONS_DIR = f"{OOPSCLAW_DIR}/evolutions"
+SCORES_DIR = f"{OOPSCLAW_DIR}/scores"
+LEARNED_DIR = f"{OOPSCLAW_DIR}/knowledge/learned"
+LOG_DIR = f"{OOPSCLAW_DIR}/logs"
 
 # 评分配置文件
 SCORES_FILE = f"{SCORES_DIR}/evolution_scores.json"
@@ -189,7 +189,7 @@ class EvolutionScorer:
         """生成评分报告"""
         report = []
         report.append("=" * 50)
-        report.append("📊 iFlow Guardian 进化评分报告")
+        report.append("📊 iFlow Oopsclaw 进化评分报告")
         report.append("=" * 50)
         report.append(f"\n当前权重配置:")
         for k, v in self.weights.items():
@@ -211,7 +211,7 @@ def create_evolution_v2() -> str:
     """创建精简版进化器 (v2.0 - 减少 token)"""
     v2_content = '''#!/usr/bin/env python3
 """
-iFlow Guardian AI 进化模块 - v2.0 精简版
+iFlow Oopsclaw AI 进化模块 - v2.0 精简版
 优化目标: 减少 token 消耗，提高效率
 """
 
@@ -219,7 +219,7 @@ import json
 import sys
 import os
 
-GUARDIAN_DIR = os.path.expanduser("~/.iflow/guardian")
+OOPSCLAW_DIR = os.path.expanduser("~/.oopsclaw")
 IFLOW_CONFIG = os.path.expanduser("~/.iflow/settings.json")
 
 def get_iflow_config():
@@ -287,7 +287,7 @@ if __name__ == "__main__":
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='iFlow Guardian Meta-Evolution')
+    parser = argparse.ArgumentParser(description='iFlow Oopsclaw Meta-Evolution')
     parser.add_argument('--score', help='记录评分', nargs='+')
     parser.add_argument('--best', action='store_true', help='获取最佳版本')
     parser.add_argument('--report', action='store_true', help='生成评分报告')

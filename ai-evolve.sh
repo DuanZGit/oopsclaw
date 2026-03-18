@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# iFlow Guardian - AI 自我进化模块 (Meta-Evolution)
+# iFlow Oopsclaw - AI 自我进化模块 (Meta-Evolution)
 # 功能: 调用 iFlow AI 分析故障，生成优化建议，自动应用到监控系统
 # 版本: 支持多版本，通过评分系统选择最佳策略
 #
@@ -8,21 +8,21 @@
 set -e
 
 # 配置
-GUARDIAN_DIR="$HOME/.iflow/guardian"
-EVOLUTIONS_DIR="$GUARDIAN_DIR/evolutions"
-LOG_DIR="$GUARDIAN_DIR/evolutions/logs"
-LEARNED_DIR="$GUARDIAN_DIR/knowledge/learned"
+OOPSCLAW_DIR="$HOME/.oopsclaw"
+EVOLUTIONS_DIR="$OOPSCLAW_DIR/evolutions"
+LOG_DIR="$OOPSCLAW_DIR/evolutions/logs"
+LEARNED_DIR="$OOPSCLAW_DIR/knowledge/learned"
 OPENCLAW_CONFIG="$HOME/.openclaw/openclaw.json"
-MONITOR_SCRIPT="$GUARDIAN_DIR/monitor.sh"
-FINGERPRINTS="$GUARDIAN_DIR/knowledge/base/fingerprints.txt"
-FEISHU_USER_ID_FILE="$GUARDIAN_DIR/feishu_user_id.txt"
+MONITOR_SCRIPT="$OOPSCLAW_DIR/monitor.sh"
+FINGERPRINTS="$OOPSCLAW_DIR/knowledge/base/fingerprints.txt"
+FEISHU_USER_ID_FILE="$OOPSCLAW_DIR/feishu_user_id.txt"
 
 # 确保目录存在
 mkdir -p "$LEARNED_DIR" "$LOG_DIR"
 
 # 选择最佳进化版本
 select_best_evolution() {
-    local best=$(python3 "$GUARDIAN_DIR/ai-evolve-meta.py" --best 2>/dev/null || echo "ai-evolve-v1.0")
+    local best=$(python3 "$OOPSCLAW_DIR/ai-evolve-meta.py" --best 2>/dev/null || echo "ai-evolve-v1.0")
     echo "$EVOLUTIONS_DIR/$best.py"
 }
 
@@ -124,7 +124,7 @@ build_prompt() {
     local recent_logs="$5"
     
     cat << EOF
-你是一个系统自愈专家。请分析以下 iFlow Guardian 监控系统的故障：
+你是一个系统自愈专家。请分析以下 iFlow Oopsclaw 监控系统的故障：
 
 ## 【问题描述】
 错误类型: $error_type
@@ -181,7 +181,7 @@ call_llm() {
     
     # 记录评分
     local tokens_estimate=$(echo "$response" | wc -c | xargs -I {} echo "$(({} / 4))")
-    local score_result=$(python3 "$GUARDIAN_DIR/ai-evolve-meta.py" \
+    local score_result=$(python3 "$OOPSCLAW_DIR/ai-evolve-meta.py" \
         --score "$(basename $EVOLUTION_SCRIPT .py)" \
         "$tokens_estimate" "$elapsed" "1" "0" "0" 2>/dev/null || true)
     
@@ -236,11 +236,11 @@ ai_analyze() {
     local error_message="$2"
     local fix_tried="$3"
     
-    log_ai "========== 开始 Guardian 自我进化 =========="
+    log_ai "========== 开始 Oopsclaw 自我进化 =========="
     log_ai "问题: $error_type"
     
     # ========== 节点1: 监控到问题 ==========
-    send_feishu_card "⚠️ Guardian 检测到问题" "**问题类型:** $error_type
+    send_feishu_card "⚠️ Oopsclaw 检测到问题" "**问题类型:** $error_type
 
 **错误信息:** $error_message
 
@@ -258,7 +258,7 @@ ai_analyze() {
     # 调用 Python 模块进行完整进化
     log_ai "调用 iFlow AI 进行全面分析..."
     local start_time=$(date +%s)
-    python3 "$GUARDIAN_DIR/ai-evolve.py" --evolve "$error_type" "$context" > /tmp/ai-evolve-output.txt 2>&1
+    python3 "$OOPSCLAW_DIR/ai-evolve.py" --evolve "$error_type" "$context" > /tmp/ai-evolve-output.txt 2>&1
     local end_time=$(date +%s)
     local elapsed=$((end_time - start_time))
     
@@ -289,7 +289,7 @@ $fix_result
     fi
     
     # ========== 节点3: 进化成功 ==========
-    send_feishu_card "🎉 Guardian 进化完成" "**问题:** $error_type
+    send_feishu_card "🎉 Oopsclaw 进化完成" "**问题:** $error_type
 
 **进化结果:**
 

@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-# iFlow Guardian - OpenClaw 监控脚本 v1.5
+# iFlow Oopsclaw - OpenClaw 监控脚本 v1.5
 # 功能: 进程监控 + 端口检查 + 日志分析 + 自动修复 + 状态综合检查
 #
 
 set -e
 
 # 配置
-GUARDIAN_DIR="$HOME/.iflow/guardian"
-LOG_DIR="$GUARDIAN_DIR/logs"
-KNOWLEDGE_DIR="$GUARDIAN_DIR/knowledge"
-BACKUP_DIR="$GUARDIAN_DIR"
+OOPSCLAW_DIR="$HOME/.oopsclaw"
+LOG_DIR="$OOPSCLAW_DIR/logs"
+KNOWLEDGE_DIR="$OOPSCLAW_DIR/knowledge"
+BACKUP_DIR="$OOPSCLAW_DIR"
 OPENCLAW_CONFIG="$HOME/.openclaw/openclaw.json"
 OPENCLAW_LOG="$HOME/.openclaw/logs"
 GATEWAY_PORT=18789
@@ -23,7 +23,7 @@ NEWAPI_KEY="sk-QqQgqwesxdxDmcLbAAenApKjuGM9VfRowI75l8R5YwkqsTpz"
 AI_MODEL="qwen/qwen3.5-397b-a17b"
 
 # 飞书配置
-FEISHU_USER_ID_FILE="$GUARDIAN_DIR/feishu_user_id.txt"
+FEISHU_USER_ID_FILE="$OOPSCLAW_DIR/feishu_user_id.txt"
 
 # 使用 OpenClaw AI 生成守护者问题分析报告
 guardian_analyze() {
@@ -439,7 +439,7 @@ ai_analyze() {
     return 0
 }
 
-# 发送通知 (启用飞书通知 + Guardian AI 分析)
+# 发送通知 (启用飞书通知 + Oopsclaw AI 分析)
 send_notification() {
     local message="$1"
     local issue_type="$2"
@@ -448,7 +448,7 @@ send_notification() {
     
     log "NOTIFICATION: $message"
     
-    # 调用 Guardian AI 进行深度分析
+    # 调用 Oopsclaw AI 进行深度分析
     local guardian_analysis=""
     if [ -n "$issue_detail" ]; then
         guardian_analysis=$(guardian_analyze "$issue_type" "$issue_detail" "$fix_action")
@@ -507,7 +507,7 @@ learn_repair_result() {
         # 如果成功率低于50%，发出警告并触发 AI 分析
         if [ "$rate" -lt 50 ] && [ "$total" -gt 5 ]; then
             log_warn "修复成功率过低，触发 AI 自我进化..."
-            "$GUARDIAN_DIR/ai-evolve.sh" analyze "低成功率" "修复成功率: $rate%" "已尝试多种修复但效果不佳"
+            "$OOPSCLAW_DIR/ai-evolve.sh" analyze "低成功率" "修复成功率: $rate%" "已尝试多种修复但效果不佳"
         fi
     fi
 }
